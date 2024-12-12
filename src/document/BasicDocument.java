@@ -36,7 +36,7 @@ public class BasicDocument extends Document
 	{
 		//TODO: Implement this method in week 2 according to the comments above.  
 		// See the Module 2 support videos if you need help.
-		List<String> words=super.getTokens("[a-zA-Z]+[^\\s]");
+		List<String> words=super.getTokens("[a-zA-Z]+");
 	    return words.size();
 	}
 	
@@ -57,7 +57,7 @@ public class BasicDocument extends Document
 	{
 	    //TODO: Implement this method.  See the Module 2 support videos 
         // if you need help.
-		List<String> Sentences= super.getTokens("[(),0-9a-zA-Z ]+[\\.|!|?]*");
+		List<String> Sentences= super.getTokens("[^.!?]+[\\.!?]?");
         return Sentences.size();
 	}
 	
@@ -82,8 +82,14 @@ public class BasicDocument extends Document
         // if you need help.  And note that there is no need to use a regular
 		// expression for the syllable counting.  We recommend you implement 
 		// the helper function countSyllables in Document.java using a loop, 
-		// and then call it here on each word.
-        return 0;
+		// and then call it here on each word.++
+		List<String> words = super.getTokens("[a-zA-Z]+");
+		int NumSyllables=0;
+		for (String word : words)
+		{
+			NumSyllables+=super.countSyllables(word);
+		}
+        return NumSyllables;
 	}
 	
 	
@@ -97,7 +103,7 @@ public class BasicDocument extends Document
 		 * in the string, respectively.  You can use these examples to help clarify 
 		 * your understanding of how to count syllables, words, and sentences.
 		 */
-	/*testCase(new BasicDocument("This is a test.  How many???  "
+	testCase(new BasicDocument("This is a test.  How many???  "
 		        + "Senteeeeeeeeeences are here... there should be 5!  Right?"),
 				16, 13, 5);
 		testCase(new BasicDocument(""), 0, 0, 0);
@@ -112,10 +118,8 @@ public class BasicDocument extends Document
 		testCase(new BasicDocument("Sentence"), 2, 1, 1);
 		testCase(new BasicDocument("Sentences?!"), 3, 1, 1);
 		testCase(new BasicDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
-		         32, 15, 1);*/
-		BasicDocument d =new BasicDocument("asser is normal. assor is right!");
-		System.out.println(d.getNumSentences());
-		System.out.println(d.getNumWords());
+		         32, 15, 1);
+		
 	}
 	
 }
