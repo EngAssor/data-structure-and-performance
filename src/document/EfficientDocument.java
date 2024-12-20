@@ -2,8 +2,6 @@ package document;
 
 import java.util.List;
 
-import spelling.WordPath;
-
 /** 
  * A class that represents a text document
  * It does one pass through the document to count the number of syllables, words, 

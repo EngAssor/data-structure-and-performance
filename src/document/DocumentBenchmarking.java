@@ -3,7 +3,6 @@ package document;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.security.Timestamp;
 
 /** A class for timing the EfficientDocument and BasicDocument classes
  * 
@@ -38,8 +37,8 @@ public class DocumentBenchmarking {
 		// TODO: Fill in the rest of this method so that it runs two loops
 		// and prints out timing results as described in the assignment 
 		// instructions and following the pseudocode below.
-		for (int numToCheck = start; numToCheck < numSteps*increment + start; 
-				numToCheck += increment)
+		System.out.println("NumberOfChars\tBasicTime\tEfficientTime");
+		for (int numToCheck = start; numToCheck < numSteps*increment + start; numToCheck += increment)
 		{
 			// numToCheck holds the number of characters that you should read from the 
 			// file to create both a BasicDocument and an EfficientDocument.  
@@ -59,21 +58,29 @@ public class DocumentBenchmarking {
 			 * 6. Print out the time it took to complete the loop in step 5 
 			 *      (on the same line as the first print statement) followed by a newline (\n) 
 			 */  
-			System.out.print(numToCheck + "\t" + System.nanoTime()/1000000000 +"\t");
-			String in =getStringFromFile(textfile,numToCheck);
-			double score =0f;
-			for (int i =0 ;i<=trials;i++)
-			{
-				BasicDocument B = new BasicDocument(in);
-				score = B.getFleschScore();
+			String output = numToCheck + "\t";
+
+			String fromFile = getStringFromFile(textfile, numToCheck);
+
+			long basicStartTime = System.nanoTime();
+			for (int i = 0; i < trials; i++) {
+				BasicDocument basic = new BasicDocument(fromFile);
+				basic.getFleschScore();
 			}
+			long basicEndTime = System.nanoTime();
+			double basicEstTime = (basicEndTime - basicStartTime) / 100000000.0;
+			output += basicEstTime + "\t";
 			
-			System.out.println(System.nanoTime()/1000000000);
-			for (int i =0 ;i<=trials;i++)
-			{
-				EfficientDocument E = new EfficientDocument(in);
-				score = E.getFleschScore();
+			long effStartTime = System.nanoTime();
+			for (int i = 0; i < trials; i++) {
+				EfficientDocument eff = new EfficientDocument(fromFile);
+				eff.getFleschScore();
 			}
+			long effEndTime = System.nanoTime();
+			double effEstTime = (effEndTime - effStartTime) / 100000000.0;
+			output += effEstTime;
+			System.out.println(output);
+			
 		}
 	
 	}

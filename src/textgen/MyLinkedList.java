@@ -2,6 +2,8 @@ package textgen;
 
 import java.util.AbstractList;
 
+import org.reactfx.util.LL;
+
 
 /** A class that implements a doubly linked list
  * 
@@ -17,6 +19,24 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
 		// TODO: Implement this method
+		this.head = new LLNode<E>(null);
+		this.tail = new LLNode<E>(null);
+		this.size = 0;
+		head.next = tail;
+		tail.prev = head;
+	}
+	private LLNode getNthNode(int index) {
+		int current = 0;
+		LLNode currentNode = this.head.next;
+		while (current <= index) {
+			if (current == index) {
+				break;
+			} else {
+				current += 1;
+				currentNode = currentNode.next;
+			}
+		}
+		return currentNode;
 	}
 
 	/**
@@ -26,7 +46,12 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public boolean add(E element ) 
 	{
 		// TODO: Implement this method
-		return false;
+		LLNode<E> newNode = new LLNode<E>(element, this.tail.prev, this.tail);
+		this.tail.prev.next=newNode;
+		this.tail.prev=newNode;
+		this.size += 1;
+		
+		return true;
 	}
 
 	/** Get the element at position index 
@@ -34,7 +59,13 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E get(int index) 
 	{
 		// TODO: Implement this method.
-		return null;
+		if(this.size <= index || index <0)
+		{
+				throw new IndexOutOfBoundsException("Invalid index");
+			
+		}
+		LLNode currentnode= getNthNode(index);
+		return (E) currentnode.data;
 	}
 
 	/**
@@ -44,7 +75,16 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public void add(int index, E element ) 
 	{
+		if (element == null) {
+			throw new NullPointerException("Cannot add node with null data");
+		}
 		// TODO: Implement this method
+		LLNode <E> node =  getNthNode(index);
+		LLNode<E> newNode = new LLNode<E>(element, node.prev, node);
+		node.prev.next=newNode;
+		node.prev=newNode;
+		this.size += 1;
+		
 	}
 
 
@@ -52,7 +92,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public int size() 
 	{
 		// TODO: Implement this method
-		return -1;
+		return this.size;
 	}
 
 	/** Remove a node at the specified index and return its data element.
@@ -64,7 +104,14 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E remove(int index) 
 	{
 		// TODO: Implement this method
-		return null;
+		if (index < 0 || index >= this.size) {
+			throw new IndexOutOfBoundsException("Index out of bounds of list");
+		}
+		LLNode node = getNthNode(index);
+		node.next.prev= node.prev;
+		node.prev.next=node.next;
+		this.size-=1;
+		return (E) node.data;
 	}
 
 	/**
@@ -77,7 +124,18 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E set(int index, E element) 
 	{
 		// TODO: Implement this method
-		return null;
+
+		if (element == null) {
+			throw new NullPointerException("Cannot add node with null data");
+		}
+		if (index < 0 || index >= this.size) {
+			throw new IndexOutOfBoundsException("Invalid index");
+		}
+		LLNode node = getNthNode(index);
+		E data = (E) node.data;
+		node.data=element;
+		
+		return data;
 	}   
 }
 
@@ -96,5 +154,14 @@ class LLNode<E>
 		this.prev = null;
 		this.next = null;
 	}
-
+	public LLNode(E e,LLNode<E> prev,LLNode<E> next) 
+	{
+		this.data = e;
+		this.prev = prev;
+		this.next = next;
+	}
+	@Override
+	public String toString() {
+		return this.data.toString();
+	}
 }
