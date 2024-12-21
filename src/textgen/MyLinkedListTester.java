@@ -1,3 +1,4 @@
+
 /**
  * 
  */
@@ -109,13 +110,33 @@ public class MyLinkedListTester {
 	@Test
 	public void testRemove()
 	{
-		int a = list1.remove(0);
-		assertEquals("Remove: check a is correct ", 65, a);
+		try {
+			list1.remove(-1);
+			fail("Cannot remove negative index");
+		}
+		catch (IndexOutOfBoundsException e) {
+
+		}
+
+		try {
+			list1.remove(5);
+			fail("Cannot remove index greater than bound");
+		}
+		catch (IndexOutOfBoundsException e) {
+
+		}
+
+		int sixtyFive = list1.remove(0);
+		assertEquals("Remove: check a is correct ", 65, sixtyFive);
 		assertEquals("Remove: check element 0 is correct ", (Integer)21, list1.get(0));
 		assertEquals("Remove: check size is correct ", 2, list1.size());
-		
-		// TODO: Add more tests here
+
+		String a = shortList.remove(0);
+		assertEquals("Remove: check a is correct ", "A", a);
+		assertEquals("Remove: check element 0 is correct ", "B", shortList.get(0));
+		assertEquals("Remove: check size is correct ", 1, shortList.size());
 	}
+	
 	
 	/** Test adding an element into the end of the list, specifically
 	 *  public boolean add(E element)
@@ -123,8 +144,15 @@ public class MyLinkedListTester {
 	@Test
 	public void testAddEnd()
 	{
-        // TODO: implement this test
-		
+		try {
+			shortList.add(null);
+			fail("Cannot add null data");
+		}
+		catch (NullPointerException e) {
+
+		}
+
+		assertEquals("add C", true, shortList.add("C"));
 	}
 
 	
@@ -132,7 +160,10 @@ public class MyLinkedListTester {
 	@Test
 	public void testSize()
 	{
-		// TODO: implement this test
+		assertEquals("shortList size", 2, shortList.size());
+		assertEquals("emptyList size", 0, emptyList.size());
+		assertEquals("longerList size", 10, longerList.size());
+		assertEquals("list1 size", 3, list1.size());
 	}
 
 	
@@ -144,19 +175,39 @@ public class MyLinkedListTester {
 	@Test
 	public void testAddAtIndex()
 	{
-        // TODO: implement this test
-		
+		try {
+			shortList.add(null);
+			fail("Cannot add null data");
+		}
+		catch (NullPointerException e) {
+
+		}
+		shortList.add(0, "C");
+		assertEquals("C added at index 0", "C", shortList.get(0));
 	}
 	
 	/** Test setting an element in the list */
 	@Test
 	public void testSet()
 	{
-	    // TODO: implement this test
+		//test empty list, get should throw an exception
+		try {
+			emptyList.set(0, 1);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+			
+		}
+		
+		try {
+			shortList.set(-1, "Yolo");
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
 	    
+		}
+		String oldValue = shortList.set(0, "Yolo");
+		assertEquals("Updated value", "Yolo", shortList.get(0));
 	}
-	
-	
-	// TODO: Optionally add more test methods.
 	
 }

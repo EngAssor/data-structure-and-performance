@@ -1,8 +1,7 @@
+
 package textgen;
 
 import java.util.AbstractList;
-
-import org.reactfx.util.LL;
 
 
 /** A class that implements a doubly linked list
@@ -18,13 +17,17 @@ public class MyLinkedList<E> extends AbstractList<E> {
 
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
-		// TODO: Implement this method
 		this.head = new LLNode<E>(null);
 		this.tail = new LLNode<E>(null);
 		this.size = 0;
 		head.next = tail;
 		tail.prev = head;
 	}
+	
+	/**
+	 * Get the node at a given element
+	 * @param index Index where node currently resides
+	 */
 	private LLNode getNthNode(int index) {
 		int current = 0;
 		LLNode currentNode = this.head.next;
@@ -43,29 +46,27 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 * Appends an element to the end of the list
 	 * @param element The element to add
 	 */
-	public boolean add(E element ) 
+	public boolean add(E element) 
 	{
+		if (element == null) {
+			throw new NullPointerException("Cannot add node with null data");
+		}
 		// TODO: Implement this method
 		LLNode<E> newNode = new LLNode<E>(element, this.tail.prev, this.tail);
-		this.tail.prev.next=newNode;
-		this.tail.prev=newNode;
+		this.tail.prev.next = newNode;
+		this.tail.prev = newNode;
 		this.size += 1;
-		
 		return true;
 	}
-
+	
 	/** Get the element at position index 
 	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
-	public E get(int index) 
-	{
-		// TODO: Implement this method.
-		if(this.size <= index || index <0)
-		{
-				throw new IndexOutOfBoundsException("Invalid index");
-			
+	public E get(int index) {
+		if (this.size <= index || index < 0) {
+			throw new IndexOutOfBoundsException("Invalid index");
 		}
-		LLNode currentnode= getNthNode(index);
-		return (E) currentnode.data;
+		LLNode currentNode = getNthNode(index);
+		return (E) currentNode.data;
 	}
 
 	/**
@@ -73,25 +74,23 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 * @param The index where the element should be added
 	 * @param element The element to add
 	 */
-	public void add(int index, E element ) 
+	public void add(int index, E element) 
 	{
 		if (element == null) {
 			throw new NullPointerException("Cannot add node with null data");
 		}
-		// TODO: Implement this method
-		LLNode <E> node =  getNthNode(index);
-		LLNode<E> newNode = new LLNode<E>(element, node.prev, node);
-		node.prev.next=newNode;
-		node.prev=newNode;
+
+		LLNode<E> nodeToMove = getNthNode(index);
+		LLNode<E> newNode = new LLNode<E>(element, nodeToMove.prev, nodeToMove);
+		nodeToMove.prev.next = newNode;
+		nodeToMove.prev = newNode;
 		this.size += 1;
-		
 	}
 
 
 	/** Return the size of the list */
 	public int size() 
 	{
-		// TODO: Implement this method
 		return this.size;
 	}
 
@@ -103,15 +102,14 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public E remove(int index) 
 	{
-		// TODO: Implement this method
 		if (index < 0 || index >= this.size) {
 			throw new IndexOutOfBoundsException("Index out of bounds of list");
 		}
-		LLNode node = getNthNode(index);
-		node.next.prev= node.prev;
-		node.prev.next=node.next;
-		this.size-=1;
-		return (E) node.data;
+		LLNode<E> nodeToRemove = getNthNode(index);
+		nodeToRemove.prev.next = nodeToRemove.next;
+		nodeToRemove.next.prev = nodeToRemove.prev;
+		this.size--;
+		return (E) nodeToRemove.data;
 	}
 
 	/**
@@ -123,19 +121,17 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public E set(int index, E element) 
 	{
-		// TODO: Implement this method
-
 		if (element == null) {
 			throw new NullPointerException("Cannot add node with null data");
 		}
 		if (index < 0 || index >= this.size) {
 			throw new IndexOutOfBoundsException("Invalid index");
 		}
-		LLNode node = getNthNode(index);
-		E data = (E) node.data;
-		node.data=element;
-		
-		return data;
+
+		LLNode<E> node = getNthNode(index);
+		E oldData = node.data;
+		node.data = element;
+		return oldData;
 	}   
 }
 
@@ -150,16 +146,16 @@ class LLNode<E>
 
 	public LLNode(E e) 
 	{
-		this.data = e;
-		this.prev = null;
-		this.next = null;
+		this(e, null, null);
 	}
-	public LLNode(E e,LLNode<E> prev,LLNode<E> next) 
+
+	public LLNode(E e, LLNode prev, LLNode next)
 	{
 		this.data = e;
 		this.prev = prev;
 		this.next = next;
 	}
+	
 	@Override
 	public String toString() {
 		return this.data.toString();
