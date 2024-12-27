@@ -40,6 +40,27 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean addWord(String word)
 	{
 	    //TODO: Implement this method.
+		word = word.toLowerCase();
+		TrieNode Node= root;
+		
+		for(char c : word.toCharArray())
+		{
+			if(Node.getValidNextCharacters().contains(c))
+			{
+				Node=Node.getChild(c);
+				
+			}
+			else
+			{
+				Node = Node.insert(c);
+			}
+		}
+		if (!Node.endsWord()) {
+			Node.setEndsWord(true);
+			this.size++;
+			return true;
+		}
+		
 	    return false;
 	}
 	
@@ -50,7 +71,8 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+		
+	    return this.size;
 	}
 	
 	
@@ -60,7 +82,18 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean isWord(String s) 
 	{
 	    // TODO: Implement this method
-		return false;
+		s =s.toLowerCase();
+		TrieNode Node = root;
+
+		for (char c : s.toCharArray())
+		{
+			if(Node.getChild(c) == null)
+			{
+					return false ;
+			}
+			Node = Node.getChild(c);
+		}
+		return Node.endsWord();
 	}
 
 	/** 
@@ -100,9 +133,37 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
-    	 
-         return null;
-     }
+    	 LinkedList<TrieNode> NodeQu = new LinkedList<TrieNode>();
+    	 List<String> completions = new LinkedList<String>();
+    	 TrieNode Node = root;
+    	 prefix = prefix.toLowerCase();
+    	 for(char c : prefix.toCharArray())
+    	 {
+    		 Node=Node.getChild(c);
+    		 if(Node == null)
+    		 {
+    			 return completions;
+    		 }
+    	 }
+    	 NodeQu.add(Node);
+    	 while (!NodeQu.isEmpty() && completions.size()< numCompletions) {
+    		 
+    		 Node = NodeQu.remove();
+    		 if(Node.endsWord())
+    		 {
+    			 completions.add(Node.getText());
+    			 
+    		 }
+    		 Set<Character> childs = Node.getValidNextCharacters();
+    		 for (char c : childs)
+    		 {
+    			 NodeQu.add(Node.getChild(c));
+    		 }
+    		 
+		}
+    	 return completions;
+
+    	      }
 
  	// For debugging
  	public void printTree()
